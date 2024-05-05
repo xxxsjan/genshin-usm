@@ -1,42 +1,37 @@
-const readline = require("readline");
+const prompts = require("prompts");
 const { readConfig, saveConfig } = require("./index.js");
 
-// 创建readline接口
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+module.exports = {};
 
-// 提问函数
-function askQuestion(question) {
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
-      resolve(answer);
-    });
-  });
-}
-
-// 主函数
-async function setConfigWithRl() {
+(async () => {
   const data = readConfig();
+  console.log('data: ', data);
+  const initGames_path = data.Games_path || "";
 
-  let Games_path, USM_Files;
-  if (!data.Games_path) {
-    Games_path = await askQuestion(
-      "请输入YuanShen.exe所在目录，参考：Genshin Impact\\Genshin Impact Game: "
-    );
-  }
+  const questions = [
+    // {
+    //   type: "number",
+    //   name: "value",
+    //   message: "How old are you?",
+    //   validate: (value) => (value < 18 ? `Nightclub is 18+ only` : true),
+    // },
+    {
+      type: "text",
+      name: "Games_path",
+      message:
+        "请输入YuanShen.exe所在目录，参考：Genshin Impact\\Genshin Impact Game: ",
+      initial: initGames_path,
+    },
+    {
+      type: "text",
+      name: "USM_Files",
+      message:
+        "请输入单个usm文件位置，参考：Genshin Impact\\Genshin Impact Game\\YuanShen_Data\\StreamingAssets\\VideoAssets\\StandaloneWindows641）: ",
+    },
+  ];
+  const response = await prompts(questions);
 
-  USM_Files = await askQuestion(
-    "请输入单个usm文件位置，参考：Genshin Impact\\Genshin Impact Game\\YuanShen_Data\\StreamingAssets\\VideoAssets\\StandaloneWindows641）: "
-  );
+  console.log(response);
+  // saveConfig(data);
 
-  data.Games_path = Games_path || data.Games_path;
-  data.USM_Files = USM_Files || data.USM_Files;
-
-  saveConfig(data);
-
-  rl.close();
-}
-
-module.exports = { setConfigWithRl };
+})();
