@@ -2,18 +2,18 @@ const fs = require("fs");
 const path = require("path");
 const _ = require("lodash");
 
-const filePath = path.resolve(__dirname, "../config.json");
+const configFilePath = path.resolve(__dirname, "../config.json");
 
 const readConfig = () => {
   try {
-    if (fs.existsSync(filePath)) {
-      console.log("filePath: ", filePath);
-      const jsonData = fs.readFileSync(filePath, "utf-8");
+    if (fs.existsSync(configFilePath)) {
+      console.log("configFilePath: ", configFilePath);
+      const jsonData = fs.readFileSync(configFilePath, "utf-8");
       console.log("jsonData: ", jsonData);
       return JSON.parse(jsonData);
     } else {
       const emptyData = {};
-      fs.writeFileSync(filePath, JSON.stringify(emptyData), "utf-8");
+      fs.writeFileSync(configFilePath, JSON.stringify(emptyData), "utf-8");
       return emptyData;
     }
   } catch (error) {
@@ -29,7 +29,7 @@ const saveConfig = (data) => {
 
     if (!isEqual) {
       const jsonData = JSON.stringify(data, null, 2);
-      fs.writeFileSync(filePath, jsonData, "utf-8");
+      fs.writeFileSync(configFilePath, jsonData, "utf-8");
       console.log("config文件已更新!");
     }
     return data;
@@ -184,6 +184,7 @@ const readLog = async () => {
     return false;
   }
 };
+
 module.exports = {
   readConfig,
   saveConfig,
